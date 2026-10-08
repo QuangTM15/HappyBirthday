@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><meta name="theme-color" content="#fde4ee"/><title>Birthday QR · Share the magic</title><link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>*{box-sizing:border-box}body{margin:0;min-height:100svh;background:radial-gradient(ellipse at top,#fffafc,#f8d5e8 65%,#e9c5e4);display:grid;place-items:center;font-family:'Quicksand',sans-serif;color:#895478;padding:25px}.qr-card{width:min(100%,420px);background:#ffffffbc;border:1px solid #fff;border-radius:28px;box-shadow:0 19px 50px #bf7eae47;padding:34px 28px;text-align:center}.script{font:64px 'Great Vibes',cursive;color:#b8598b;margin:0}.lead{font-size:13px;line-height:1.9}#qrcode{display:flex;justify-content:center;margin:22px auto;padding:17px;background:white;border-radius:18px;width:max-content;max-width:100%;box-shadow:0 6px 22px #aa6e9630}#qrcode img,#qrcode canvas{width:218px!important;height:218px!important}#siteUrl{width:100%;border:1px solid #e9c3d6;border-radius:12px;padding:13px;font:12px 'Quicksand',sans-serif;color:#895478;background:#fff}button,.home{border:0;border-radius:99px;padding:12px 21px;background:#db77a3;color:white;font:700 13px 'Quicksand',sans-serif;margin:8px 3px;cursor:pointer;display:inline-block;text-decoration:none}.home{background:#fff;color:#b35f8b;border:1px solid #e9bcce}.note{font-size:11px;line-height:1.8;opacity:.85}.warning{color:#a03f6a}</style>
+</head><body><main class="qr-card"><div style="font-size:26px">💌 ✨ 🎀</div><h1 class="script">Scan the magic</h1><p class="lead">Một tấm thiệp bé xíu có thể cất cả một bầu trời lời chúc. Dùng QR để gửi món quà này nhé!</p><div id="qrcode"></div><label for="siteUrl" style="font-size:11px;font-weight:700;display:block;margin-bottom:7px">ĐƯỜNG DẪN WEBSITE</label><input id="siteUrl" type="url" spellcheck="false"/><div><button type="button" id="makeBtn">Tạo / cập nhật QR</button><button type="button" id="downloadBtn">Tải QR PNG ↓</button></div><a class="home" href="index.html">← Quay lại website</a><p id="status" class="note" role="status">Đăng web lên mạng trước khi gửi QR nhé.</p></main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script><script>
+(() => {
+ const input=document.getElementById('siteUrl'),out=document.getElementById('qrcode'),status=document.getElementById('status');
+ input.value=new URL('index.html',location.href).href;
+ function generate(){
+  if(!window.QRCode){status.textContent='Không tải được thư viện QR. Hãy kết nối Internet và thử tải lại trang.';status.classList.add('warning');return;}
+  let url;try{url=new URL(input.value.trim());if(!['https:','http:'].includes(url.protocol))throw Error();}catch(e){status.textContent='Vui lòng nhập đường dẫn web HTTP/HTTPS hợp lệ.';status.classList.add('warning');return;}
+  out.replaceChildren();new QRCode(out,{text:url.href,width:218,height:218,colorDark:'#503046',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H});
+  if(['localhost','127.0.0.1'].includes(url.hostname)||url.protocol==='file:') {status.textContent='Đây là đường dẫn thử trên máy, chưa dùng được khi người khác quét QR từ điện thoại. Hãy deploy trước!';status.classList.add('warning');}
+  else {status.textContent='Mã QR đã sẵn sàng. Hãy quét thử bằng điện thoại trước khi gửi.';status.classList.remove('warning');}
+ }
+ document.getElementById('makeBtn').onclick=generate;
+ document.getElementById('downloadBtn').onclick=()=>{
+  const canvas=out.querySelector('canvas');const img=out.querySelector('img');
+  if(!canvas&&!img){status.textContent='Hãy tạo QR trước nhé.';return;}
+  const source=canvas?canvas.toDataURL('image/png'):img.src;
+  const a=document.createElement('a');a.href=source;a.download='birthday-surprise-QR.png';a.click();
+ };
+ generate();
+})();</script></body></html>
